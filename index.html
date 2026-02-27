@@ -8,29 +8,53 @@
 <style>
 body{
     margin:0;
-    background:linear-gradient(135deg,#141e30,#243b55);
+    background: radial-gradient(circle at top, #1f1f3a, #0d0d18);
     display:flex;
     flex-direction:column;
     align-items:center;
+    font-family: 'Segoe UI', sans-serif;
     color:white;
-    font-family:Arial, sans-serif;
 }
 
-h2{margin-top:15px;}
+h2{
+    margin-top:20px;
+    font-weight:300;
+    letter-spacing:1px;
+}
 
 canvas{
-    background:#0f0f18;
-    margin-top:10px;
-    border-radius:10px;
+    background:rgba(255,255,255,0.05);
+    backdrop-filter: blur(5px);
+    margin-top:15px;
+    border-radius:15px;
+    box-shadow:0 0 20px rgba(255,77,166,0.3);
+}
+
+#controls{
+    margin-top:15px;
+    display:grid;
+    grid-template-columns:60px 60px 60px;
+    gap:8px;
+    justify-content:center;
+}
+
+.ctrl{
+    background:#ff4da6;
+    border:none;
+    border-radius:12px;
+    font-size:20px;
+    color:white;
+    padding:10px;
+    cursor:pointer;
 }
 
 #msg{
     margin-top:15px;
     text-align:center;
-    max-width:350px;
+    max-width:320px;
+    min-height:60px;
 }
-
-button{
+button.final{
     padding:10px 20px;
     border:none;
     border-radius:10px;
@@ -38,16 +62,24 @@ button{
     color:white;
     font-size:16px;
     cursor:pointer;
-    margin-top:10px;
 }
 </style>
 </head>
 <body>
 
-<h2>🧭 Labirinto do Destino</h2>
-<p>Use as setas do teclado para se mover</p>
+<h2>💖 Labirinto do Destino 💖</h2>
 
 <canvas id="game" width="300" height="300"></canvas>
+
+<div id="controls">
+    <div></div>
+    <button class="ctrl" onclick="move(0,-1)">⬆️</button>
+    <div></div>
+    <button class="ctrl" onclick="move(-1,0)">⬅️</button>
+    <button class="ctrl" onclick="move(0,1)">⬇️</button>
+    <button class="ctrl" onclick="move(1,0)">➡️</button>
+</div>
+
 <div id="msg"></div>
 
 <script>
@@ -70,51 +102,43 @@ const maze = [
 [0,0,0,1,0,0,0,1,1,0],
 [1,1,0,1,1,1,0,0,0,0],
 [0,0,0,0,0,1,0,1,1,0],
-[0,1,1,1,0,0,0,0,1,2] // 2 = final
+[0,1,1,1,0,0,0,0,1,2]
 ];
 
 const clues = {
-    "2,0":"O destino gosta de coincidências...",
-    "4,4":"Alguns caminhos parecem difíceis no começo...",
-    "7,8":"Mas às vezes o prêmio está no final..."
+    "2,0":"✨ O destino gosta de coincidências...",
+    "4,4":"💫 Alguns caminhos parecem difíceis...",
+    "7,8":"💖 Mas o prêmio sempre vale a pena..."
 };
-
-document.addEventListener("keydown", move);
 
 function draw(){
     ctx.clearRect(0,0,300,300);
 
     for(let y=0;y<rows;y++){
         for(let x=0;x<cols;x++){
-            if(maze[y][x] == 1){
-                ctx.fillStyle="#333";
+            if(maze[y][x]==1){
+                ctx.fillStyle="#2e2e4d";
                 ctx.fillRect(x*tile,y*tile,tile,tile);
             }
-            if(maze[y][x] == 2){
+            if(maze[y][x]==2){
                 ctx.fillStyle="#ff4da6";
                 ctx.fillRect(x*tile,y*tile,tile,tile);
             }
         }
     }
 
-    ctx.fillStyle="#00ffff";
-    ctx.fillRect(player.x*tile,player.y*tile,tile,tile);
+    ctx.font="24px Arial";
+    ctx.fillText("💖",player.x*tile+3,player.y*tile+25);
 }
 
-function move(e){
-    let newX = player.x;
-    let newY = player.y;
-
-    if(e.key=="ArrowUp") newY--;
-    if(e.key=="ArrowDown") newY++;
-    if(e.key=="ArrowLeft") newX--;
-    if(e.key=="ArrowRight") newX++;
+function move(dx,dy){
+    let newX = player.x + dx;
+    let newY = player.y + dy;
 
     if(newX>=0 && newY>=0 && newX<cols && newY<rows){
-        if(maze[newY][newX] != 1){
-            player.x = newX;
-            player.y = newY;
-
+        if(maze[newY][newX]!=1){
+            player.x=newX;
+            player.y=newY;
             checkClue();
             checkWin();
             draw();
@@ -125,25 +149,25 @@ function move(e){
 function checkClue(){
     let key = player.y + "," + player.x;
     if(clues[key]){
-        document.getElementById("msg").innerHTML = "<p>"+clues[key]+"</p>";
+        document.getElementById("msg").innerHTML="<p>"+clues[key]+"</p>";
     }
 }
 
 function checkWin(){
-    if(maze[player.y][player.x] == 2){
-        document.getElementById("msg").innerHTML = `
+    if(maze[player.y][player.x]==2){
+        document.getElementById("msg").innerHTML=`
         <h3>💫 Você atravessou o labirinto...</h3>
         <p>E encontrou o verdadeiro prêmio.</p>
         <h2 style="color:#ff4da6;">Um encontro com o Léo 😌</h2>
         <p>Ele quer saber...</p>
         <h3>Você aceita sair com ele essa semana?</h3>
-        <button onclick="aceitou()">Aceito 💖</button>
+        <button class="final" onclick="aceitou()">Aceito 💖</button>
         `;
     }
 }
 
 function aceitou(){
-    document.getElementById("msg").innerHTML = `
+    document.getElementById("msg").innerHTML=`
     <h2>🥰 Excelente escolha.</h2>
     <p>Prepare-se... esse encontro promete 😌</p>
     `;
