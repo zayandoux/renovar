@@ -14,20 +14,20 @@ body{
     align-items:center;
     font-family: 'Segoe UI', sans-serif;
     color:white;
+    overflow:hidden;
 }
 
 h2{
     margin-top:20px;
     font-weight:300;
-    letter-spacing:1px;
 }
 
 canvas{
     background:rgba(255,255,255,0.05);
-    backdrop-filter: blur(5px);
+    backdrop-filter: blur(6px);
     margin-top:15px;
     border-radius:15px;
-    box-shadow:0 0 20px rgba(255,77,166,0.3);
+    box-shadow:0 0 25px rgba(255,77,166,0.4);
 }
 
 #controls{
@@ -35,7 +35,6 @@ canvas{
     display:grid;
     grid-template-columns:60px 60px 60px;
     gap:8px;
-    justify-content:center;
 }
 
 .ctrl{
@@ -48,16 +47,38 @@ canvas{
     cursor:pointer;
 }
 
-#msg{
-    margin-top:15px;
+#overlay{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:linear-gradient(135deg,#141e30,#243b55);
+    display:none;
+    justify-content:center;
+    align-items:center;
     text-align:center;
-    max-width:320px;
-    min-height:60px;
+    padding:20px;
+    animation:fadeIn 1s ease forwards;
 }
-button.final{
-    padding:10px 20px;
+
+@keyframes fadeIn{
+    from{opacity:0}
+    to{opacity:1}
+}
+
+.final-box{
+    background:rgba(255,255,255,0.05);
+    padding:30px;
+    border-radius:20px;
+    box-shadow:0 0 30px rgba(255,77,166,0.5);
+}
+
+.final-box button{
+    margin-top:15px;
+    padding:12px 25px;
     border:none;
-    border-radius:10px;
+    border-radius:12px;
     background:#ff4da6;
     color:white;
     font-size:16px;
@@ -68,51 +89,58 @@ button.final{
 <body>
 
 <h2>💖 Labirinto do Destino 💖</h2>
-
-<canvas id="game" width="300" height="300"></canvas>
+<canvas id="game" width="360" height="360"></canvas>
 
 <div id="controls">
     <div></div>
-    <button class="ctrl" onclick="move(0,-1)">⬆️</button>
+    <button class="ctrl" onclick="setDirection(0,-1)">⬆️</button>
     <div></div>
-    <button class="ctrl" onclick="move(-1,0)">⬅️</button>
-    <button class="ctrl" onclick="move(0,1)">⬇️</button>
-    <button class="ctrl" onclick="move(1,0)">➡️</button>
+    <button class="ctrl" onclick="setDirection(-1,0)">⬅️</button>
+    <button class="ctrl" onclick="setDirection(0,1)">⬇️</button>
+    <button class="ctrl" onclick="setDirection(1,0)">➡️</button>
 </div>
 
-<div id="msg"></div>
+<div id="overlay">
+    <div class="final-box">
+        <h2>💫 Você conseguiu...</h2>
+        <p>Depois de atravessar todos os caminhos...</p>
+        <h2 style="color:#ff4da6;">O prêmio é um encontro com o Léo 😌</h2>
+        <p>Ele quer saber...</p>
+        <h3>Você aceita sair com ele essa semana?</h3>
+        <button onclick="aceitou()">Aceito 💖</button>
+    </div>
+</div>
 
 <script>
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
 
 const tile = 30;
-const rows = 10;
-const cols = 10;
+const rows = 12;
+const cols = 12;
 
 let player = {x:0,y:0};
+let targetX = 0;
+let targetY = 0;
+let moving = false;
 
 const maze = [
-[0,1,0,0,0,1,0,0,0,0],
-[0,1,0,1,0,1,0,1,1,0],
-[0,0,0,1,0,0,0,1,0,0],
-[1,1,0,1,1,1,0,1,0,1],
-[0,0,0,0,0,1,0,0,0,1],
-[0,1,1,1,0,1,1,1,0,0],
-[0,0,0,1,0,0,0,1,1,0],
-[1,1,0,1,1,1,0,0,0,0],
-[0,0,0,0,0,1,0,1,1,0],
-[0,1,1,1,0,0,0,0,1,2]
+[0,1,0,0,0,1,0,0,0,0,1,0],
+[0,1,0,1,0,1,0,1,1,0,1,0],
+[0,0,0,1,0,0,0,1,0,0,1,0],
+[1,1,0,1,1,1,0,1,0,1,1,0],
+[0,0,0,0,0,1,0,0,0,1,0,0],
+[0,1,1,1,0,1,1,1,0,1,0,1],
+[0,0,0,1,0,0,0,1,0,0,0,1],
+[1,1,0,1,1,1,0,0,1,1,0,0],
+[0,0,0,0,0,1,0,1,1,0,0,1],
+[0,1,1,1,0,1,0,0,0,0,1,0],
+[0,0,0,1,0,0,0,1,1,0,1,0],
+[1,1,0,0,0,1,0,0,1,0,0,2]
 ];
 
-const clues = {
-    "2,0":"✨ O destino gosta de coincidências...",
-    "4,4":"💫 Alguns caminhos parecem difíceis...",
-    "7,8":"💖 Mas o prêmio sempre vale a pena..."
-};
-
-function draw(){
-    ctx.clearRect(0,0,300,300);
+function drawMaze(){
+    ctx.clearRect(0,0,360,360);
 
     for(let y=0;y<rows;y++){
         for(let x=0;x<cols;x++){
@@ -127,53 +155,60 @@ function draw(){
         }
     }
 
-    ctx.font="24px Arial";
-    ctx.fillText("💖",player.x*tile+3,player.y*tile+25);
+    ctx.font="26px Arial";
+    ctx.fillText("💖",player.x*tile+3,player.y*tile+26);
 }
 
-function move(dx,dy){
-    let newX = player.x + dx;
-    let newY = player.y + dy;
+function setDirection(dx,dy){
+    if(moving) return;
+
+    let newX = Math.round(player.x) + dx;
+    let newY = Math.round(player.y) + dy;
 
     if(newX>=0 && newY>=0 && newX<cols && newY<rows){
         if(maze[newY][newX]!=1){
-            player.x=newX;
-            player.y=newY;
-            checkClue();
-            checkWin();
-            draw();
+            targetX = newX;
+            targetY = newY;
+            moving = true;
         }
     }
 }
 
-function checkClue(){
-    let key = player.y + "," + player.x;
-    if(clues[key]){
-        document.getElementById("msg").innerHTML="<p>"+clues[key]+"</p>";
+function update(){
+    if(moving){
+        player.x += (targetX - player.x) * 0.2;
+        player.y += (targetY - player.y) * 0.2;
+
+        if(Math.abs(player.x-targetX)<0.05 && Math.abs(player.y-targetY)<0.05){
+            player.x = targetX;
+            player.y = targetY;
+            moving = false;
+
+            if(maze[targetY][targetX]==2){
+                winGame();
+            }
+        }
     }
+
+    drawMaze();
+    requestAnimationFrame(update);
 }
 
-function checkWin(){
-    if(maze[player.y][player.x]==2){
-        document.getElementById("msg").innerHTML=`
-        <h3>💫 Você atravessou o labirinto...</h3>
-        <p>E encontrou o verdadeiro prêmio.</p>
-        <h2 style="color:#ff4da6;">Um encontro com o Léo 😌</h2>
-        <p>Ele quer saber...</p>
-        <h3>Você aceita sair com ele essa semana?</h3>
-        <button class="final" onclick="aceitou()">Aceito 💖</button>
-        `;
-    }
+function winGame(){
+    document.querySelector("canvas").style.display="none";
+    document.getElementById("controls").style.display="none";
+    document.querySelector("h2").style.display="none";
+    document.getElementById("overlay").style.display="flex";
 }
 
 function aceitou(){
-    document.getElementById("msg").innerHTML=`
+    document.querySelector(".final-box").innerHTML = `
     <h2>🥰 Excelente escolha.</h2>
     <p>Prepare-se... esse encontro promete 😌</p>
     `;
 }
 
-draw();
+update();
 </script>
 
 </body>
