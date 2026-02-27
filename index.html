@@ -3,100 +3,93 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Descubra o Prêmio 🎁</title>
+<title>Escolhas do Destino</title>
 
 <style>
 body{
     margin:0;
     font-family: Arial, sans-serif;
-    background: linear-gradient(135deg,#1e1e2f,#3a3a5f);
+    background: linear-gradient(135deg,#141e30,#243b55);
     color:white;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
     text-align:center;
-    overflow:hidden;
+    padding:20px;
 }
 
-h1{
-    margin-top:40px;
+.container{
+    max-width:400px;
 }
 
 button{
-    padding:12px 25px;
-    font-size:18px;
+    margin:10px;
+    padding:12px 20px;
     border:none;
-    border-radius:12px;
+    border-radius:10px;
+    font-size:16px;
     cursor:pointer;
-    margin-top:20px;
     background:#ff4da6;
     color:white;
-}
-
-#gameArea{
-    margin-top:40px;
-}
-
-.hidden{
-    display:none;
-}
-
-#movingButton{
-    position:absolute;
 }
 </style>
 </head>
 
 <body>
 
-<h1>🎁 Descubra o Prêmio Misterioso 🎁</h1>
-<p>Você consegue desbloquear o prêmio secreto?</p>
-
-<div id="gameArea">
-    <button onclick="startGame()">Começar</button>
+<div class="container" id="game">
+    <h2>✨ Jogo das Escolhas ✨</h2>
+    <p>Vamos ver onde suas escolhas te levam...</p>
+    <button onclick="next(1)">Começar</button>
 </div>
 
 <script>
 
-let stage = 0;
+function next(stage){
 
-function startGame(){
-    document.getElementById("gameArea").innerHTML =
-    "<p>Fase 1: Clique no botão 3 vezes</p><button onclick='nextStage()'>Clique aqui</button>";
-}
-
-function nextStage(){
-    stage++;
-    if(stage < 3){
-        return;
+    if(stage == 1){
+        document.getElementById("game").innerHTML = `
+        <p>Você prefere:</p>
+        <button onclick="next(2)">🌊 Praia</button>
+        <button onclick="next(2)">🎬 Cinema</button>
+        `;
     }
 
-    document.getElementById("gameArea").innerHTML =
-    "<p>Fase 2: Pegue o botão se conseguir 😏</p>";
+    else if(stage == 2){
+        document.getElementById("game").innerHTML = `
+        <p>Você gosta mais de:</p>
+        <button onclick="next(3)">🍕 Algo descontraído</button>
+        <button onclick="next(3)">🍷 Algo mais especial</button>
+        `;
+    }
 
-    let btn = document.createElement("button");
-    btn.innerHTML = "Clique em mim";
-    btn.id = "movingButton";
-    btn.onmouseover = moveButton;
-    btn.onclick = finalStage;
+    else if(stage == 3){
+        document.getElementById("game").innerHTML = `
+        <p>Escolha uma vibe:</p>
+        <button onclick="next(4)">😌 Tranquila</button>
+        <button onclick="next(4)">🔥 Marcante</button>
+        `;
+    }
 
-    document.body.appendChild(btn);
-}
-
-function moveButton(){
-    let x = Math.random() * (window.innerWidth - 120);
-    let y = Math.random() * (window.innerHeight - 60);
-    this.style.left = x + "px";
-    this.style.top = y + "px";
-}
-
-function finalStage(){
-    document.body.innerHTML = `
-        <div style="display:flex;flex-direction:column;justify-content:center;align-items:center;height:100vh;text-align:center;">
-        <h1>🏆 Parabéns!</h1>
-        <p>Você desbloqueou o prêmio secreto...</p>
-        <h2 style="color:#ff4da6;">Um encontro especial com o Léo 😌</h2>
+    else if(stage == 4){
+        document.getElementById("game").innerHTML = `
+        <h2>💫 Interessante...</h2>
+        <p>Não importa o que você escolhe...</p>
+        <p>O destino sempre te leva para o mesmo lugar.</p>
+        <h3 style="color:#ff4da6;">Um encontro com o Léo 😌</h3>
         <p>Ele quer saber...</p>
         <h3>Você aceita sair com ele essa semana?</h3>
-        <button onclick="alert('Ele já sabia 😏💖')">Sim 💘</button>
-        </div>
+        <button onclick="resposta()">Aceito 💖</button>
+        `;
+    }
+
+}
+
+function resposta(){
+    document.getElementById("game").innerHTML = `
+    <h2>🥰 Ele vai ficar muito feliz.</h2>
+    <p>Prepare-se... esse encontro promete 😌</p>
     `;
 }
 
