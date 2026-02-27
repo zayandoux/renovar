@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Snake Misteriosa 🐍</title>
+<title>Labirinto do Destino</title>
 
 <style>
 body{
     margin:0;
-    background: linear-gradient(135deg,#141e30,#243b55);
+    background:linear-gradient(135deg,#141e30,#243b55);
     display:flex;
     flex-direction:column;
     align-items:center;
@@ -16,20 +16,20 @@ body{
     font-family:Arial, sans-serif;
 }
 
-h2{
-    margin-top:20px;
-}
+h2{margin-top:15px;}
 
 canvas{
-    background:#111;
+    background:#0f0f18;
     margin-top:10px;
     border-radius:10px;
 }
 
-#message{
-    margin-top:20px;
+#msg{
+    margin-top:15px;
     text-align:center;
+    max-width:350px;
 }
+
 button{
     padding:10px 20px;
     border:none;
@@ -44,105 +44,112 @@ button{
 </head>
 <body>
 
-<h2>🐍 Jogo Misterioso 🐍</h2>
-<p>Alimente a cobrinha...</p>
+<h2>🧭 Labirinto do Destino</h2>
+<p>Use as setas do teclado para se mover</p>
+
 <canvas id="game" width="300" height="300"></canvas>
-<div id="message"></div>
+<div id="msg"></div>
 
 <script>
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
 
-const box = 15;
-let snake = [{x:150,y:150}];
-let direction = "RIGHT";
-let food = randomFood();
-let score = 0;
+const tile = 30;
+const rows = 10;
+const cols = 10;
 
-document.addEventListener("keydown", changeDirection);
+let player = {x:0,y:0};
 
-// Controles para celular
-canvas.addEventListener("touchstart", handleTouch);
+const maze = [
+[0,1,0,0,0,1,0,0,0,0],
+[0,1,0,1,0,1,0,1,1,0],
+[0,0,0,1,0,0,0,1,0,0],
+[1,1,0,1,1,1,0,1,0,1],
+[0,0,0,0,0,1,0,0,0,1],
+[0,1,1,1,0,1,1,1,0,0],
+[0,0,0,1,0,0,0,1,1,0],
+[1,1,0,1,1,1,0,0,0,0],
+[0,0,0,0,0,1,0,1,1,0],
+[0,1,1,1,0,0,0,0,1,2] // 2 = final
+];
 
-function handleTouch(e){
-    let touchX = e.touches[0].clientX;
-    let touchY = e.touches[0].clientY;
-    if(touchX < window.innerWidth/2) direction = "LEFT";
-    else direction = "RIGHT";
-}
+const clues = {
+    "2,0":"O destino gosta de coincidências...",
+    "4,4":"Alguns caminhos parecem difíceis no começo...",
+    "7,8":"Mas às vezes o prêmio está no final..."
+};
 
-function randomFood(){
-    return {
-        x: Math.floor(Math.random()*20)*box,
-        y: Math.floor(Math.random()*20)*box
-    }
-}
-
-function changeDirection(event){
-    if(event.key == "ArrowLeft" && direction != "RIGHT") direction="LEFT";
-    if(event.key == "ArrowUp" && direction != "DOWN") direction="UP";
-    if(event.key == "ArrowRight" && direction != "LEFT") direction="RIGHT";
-    if(event.key == "ArrowDown" && direction != "UP") direction="DOWN";
-}
+document.addEventListener("keydown", move);
 
 function draw(){
-    ctx.fillStyle="#111";
-    ctx.fillRect(0,0,300,300);
+    ctx.clearRect(0,0,300,300);
 
-    for(let i=0;i<snake.length;i++){
-        ctx.fillStyle=i==0?"#ff4da6":"#ff85c2";
-        ctx.fillRect(snake[i].x,snake[i].y,box,box);
+    for(let y=0;y<rows;y++){
+        for(let x=0;x<cols;x++){
+            if(maze[y][x] == 1){
+                ctx.fillStyle="#333";
+                ctx.fillRect(x*tile,y*tile,tile,tile);
+            }
+            if(maze[y][x] == 2){
+                ctx.fillStyle="#ff4da6";
+                ctx.fillRect(x*tile,y*tile,tile,tile);
+            }
+        }
     }
 
-    ctx.fillStyle="red";
-    ctx.font="20px Arial";
-    ctx.fillText("💖", food.x, food.y+15);
-
-    let snakeX=snake[0].x;
-    let snakeY=snake[0].y;
-
-    if(direction=="LEFT") snakeX-=box;
-    if(direction=="UP") snakeY-=box;
-    if(direction=="RIGHT") snakeX+=box;
-    if(direction=="DOWN") snakeY+=box;
-
-    if(snakeX==food.x && snakeY==food.y){
-        score++;
-        food=randomFood();
-    }else{
-        snake.pop();
-    }
-
-    let newHead={x:snakeX,y:snakeY};
-
-    if(snakeX<0||snakeY<0||snakeX>=300||snakeY>=300){
-        clearInterval(game);
-        showFinal();
-    }
-
-    snake.unshift(newHead);
+    ctx.fillStyle="#00ffff";
+    ctx.fillRect(player.x*tile,player.y*tile,tile,tile);
 }
 
-function showFinal(){
-    document.getElementById("message").innerHTML = `
-        <h3>💫 Interessante...</h3>
-        <p>Você alimentou a cobrinha com ${score} corações...</p>
-        <p>Mas o verdadeiro prêmio não era o jogo.</p>
-        <h2 style="color:#ff4da6;">Era um convite especial 😌</h2>
-        <p>O Léo quer saber...</p>
+function move(e){
+    let newX = player.x;
+    let newY = player.y;
+
+    if(e.key=="ArrowUp") newY--;
+    if(e.key=="ArrowDown") newY++;
+    if(e.key=="ArrowLeft") newX--;
+    if(e.key=="ArrowRight") newX++;
+
+    if(newX>=0 && newY>=0 && newX<cols && newY<rows){
+        if(maze[newY][newX] != 1){
+            player.x = newX;
+            player.y = newY;
+
+            checkClue();
+            checkWin();
+            draw();
+        }
+    }
+}
+
+function checkClue(){
+    let key = player.y + "," + player.x;
+    if(clues[key]){
+        document.getElementById("msg").innerHTML = "<p>"+clues[key]+"</p>";
+    }
+}
+
+function checkWin(){
+    if(maze[player.y][player.x] == 2){
+        document.getElementById("msg").innerHTML = `
+        <h3>💫 Você atravessou o labirinto...</h3>
+        <p>E encontrou o verdadeiro prêmio.</p>
+        <h2 style="color:#ff4da6;">Um encontro com o Léo 😌</h2>
+        <p>Ele quer saber...</p>
         <h3>Você aceita sair com ele essa semana?</h3>
         <button onclick="aceitou()">Aceito 💖</button>
-    `;
+        `;
+    }
 }
 
 function aceitou(){
-    document.getElementById("message").innerHTML = `
-        <h2>🥰 Ele vai adorar ouvir isso.</h2>
-        <p>Prepare-se... esse encontro promete 😌</p>
+    document.getElementById("msg").innerHTML = `
+    <h2>🥰 Excelente escolha.</h2>
+    <p>Prepare-se... esse encontro promete 😌</p>
     `;
 }
 
-let game=setInterval(draw,120);
+draw();
 </script>
 
 </body>
