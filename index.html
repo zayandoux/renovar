@@ -3,96 +3,146 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Escolhas do Destino</title>
+<title>Snake Misteriosa 🐍</title>
 
 <style>
 body{
     margin:0;
-    font-family: Arial, sans-serif;
     background: linear-gradient(135deg,#141e30,#243b55);
-    color:white;
     display:flex;
-    justify-content:center;
+    flex-direction:column;
     align-items:center;
-    height:100vh;
+    color:white;
+    font-family:Arial, sans-serif;
+}
+
+h2{
+    margin-top:20px;
+}
+
+canvas{
+    background:#111;
+    margin-top:10px;
+    border-radius:10px;
+}
+
+#message{
+    margin-top:20px;
     text-align:center;
-    padding:20px;
 }
-
-.container{
-    max-width:400px;
-}
-
 button{
-    margin:10px;
-    padding:12px 20px;
+    padding:10px 20px;
     border:none;
     border-radius:10px;
-    font-size:16px;
-    cursor:pointer;
     background:#ff4da6;
     color:white;
+    font-size:16px;
+    cursor:pointer;
+    margin-top:10px;
 }
 </style>
 </head>
-
 <body>
 
-<div class="container" id="game">
-    <h2>✨ Jogo das Escolhas ✨</h2>
-    <p>Vamos ver onde suas escolhas te levam...</p>
-    <button onclick="next(1)">Começar</button>
-</div>
+<h2>🐍 Jogo Misterioso 🐍</h2>
+<p>Alimente a cobrinha...</p>
+<canvas id="game" width="300" height="300"></canvas>
+<div id="message"></div>
 
 <script>
+const canvas = document.getElementById("game");
+const ctx = canvas.getContext("2d");
 
-function next(stage){
+const box = 15;
+let snake = [{x:150,y:150}];
+let direction = "RIGHT";
+let food = randomFood();
+let score = 0;
 
-    if(stage == 1){
-        document.getElementById("game").innerHTML = `
-        <p>Você prefere:</p>
-        <button onclick="next(2)">🌊 Praia</button>
-        <button onclick="next(2)">🎬 Cinema</button>
-        `;
-    }
+document.addEventListener("keydown", changeDirection);
 
-    else if(stage == 2){
-        document.getElementById("game").innerHTML = `
-        <p>Você gosta mais de:</p>
-        <button onclick="next(3)">🍕 Algo descontraído</button>
-        <button onclick="next(3)">🍷 Algo mais especial</button>
-        `;
-    }
+// Controles para celular
+canvas.addEventListener("touchstart", handleTouch);
 
-    else if(stage == 3){
-        document.getElementById("game").innerHTML = `
-        <p>Escolha uma vibe:</p>
-        <button onclick="next(4)">😌 Tranquila</button>
-        <button onclick="next(4)">🔥 Marcante</button>
-        `;
-    }
-
-    else if(stage == 4){
-        document.getElementById("game").innerHTML = `
-        <h2>💫 Interessante...</h2>
-        <p>Não importa o que você escolhe...</p>
-        <p>O destino sempre te leva para o mesmo lugar.</p>
-        <h3 style="color:#ff4da6;">Um encontro com o Léo 😌</h3>
-        <p>Ele quer saber...</p>
-        <h3>Você aceita sair com ele essa semana?</h3>
-        <button onclick="resposta()">Aceito 💖</button>
-        `;
-    }
-
+function handleTouch(e){
+    let touchX = e.touches[0].clientX;
+    let touchY = e.touches[0].clientY;
+    if(touchX < window.innerWidth/2) direction = "LEFT";
+    else direction = "RIGHT";
 }
 
-function resposta(){
-    document.getElementById("game").innerHTML = `
-    <h2>🥰 Ele vai ficar muito feliz.</h2>
-    <p>Prepare-se... esse encontro promete 😌</p>
+function randomFood(){
+    return {
+        x: Math.floor(Math.random()*20)*box,
+        y: Math.floor(Math.random()*20)*box
+    }
+}
+
+function changeDirection(event){
+    if(event.key == "ArrowLeft" && direction != "RIGHT") direction="LEFT";
+    if(event.key == "ArrowUp" && direction != "DOWN") direction="UP";
+    if(event.key == "ArrowRight" && direction != "LEFT") direction="RIGHT";
+    if(event.key == "ArrowDown" && direction != "UP") direction="DOWN";
+}
+
+function draw(){
+    ctx.fillStyle="#111";
+    ctx.fillRect(0,0,300,300);
+
+    for(let i=0;i<snake.length;i++){
+        ctx.fillStyle=i==0?"#ff4da6":"#ff85c2";
+        ctx.fillRect(snake[i].x,snake[i].y,box,box);
+    }
+
+    ctx.fillStyle="red";
+    ctx.font="20px Arial";
+    ctx.fillText("💖", food.x, food.y+15);
+
+    let snakeX=snake[0].x;
+    let snakeY=snake[0].y;
+
+    if(direction=="LEFT") snakeX-=box;
+    if(direction=="UP") snakeY-=box;
+    if(direction=="RIGHT") snakeX+=box;
+    if(direction=="DOWN") snakeY+=box;
+
+    if(snakeX==food.x && snakeY==food.y){
+        score++;
+        food=randomFood();
+    }else{
+        snake.pop();
+    }
+
+    let newHead={x:snakeX,y:snakeY};
+
+    if(snakeX<0||snakeY<0||snakeX>=300||snakeY>=300){
+        clearInterval(game);
+        showFinal();
+    }
+
+    snake.unshift(newHead);
+}
+
+function showFinal(){
+    document.getElementById("message").innerHTML = `
+        <h3>💫 Interessante...</h3>
+        <p>Você alimentou a cobrinha com ${score} corações...</p>
+        <p>Mas o verdadeiro prêmio não era o jogo.</p>
+        <h2 style="color:#ff4da6;">Era um convite especial 😌</h2>
+        <p>O Léo quer saber...</p>
+        <h3>Você aceita sair com ele essa semana?</h3>
+        <button onclick="aceitou()">Aceito 💖</button>
     `;
 }
 
+function aceitou(){
+    document.getElementById("message").innerHTML = `
+        <h2>🥰 Ele vai adorar ouvir isso.</h2>
+        <p>Prepare-se... esse encontro promete 😌</p>
+    `;
+}
+
+let game=setInterval(draw,120);
 </script>
 
 </body>
