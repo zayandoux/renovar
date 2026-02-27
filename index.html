@@ -3,109 +3,103 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>O Coração do Léo 💘</title>
+<title>Descubra o Prêmio 🎁</title>
 
 <style>
 body{
     margin:0;
-    overflow:hidden;
     font-family: Arial, sans-serif;
-    background: linear-gradient(to bottom, #ffd6e7, #ff9ecf);
+    background: linear-gradient(135deg,#1e1e2f,#3a3a5f);
+    color:white;
     text-align:center;
+    overflow:hidden;
 }
 
 h1{
-    color:#fff;
-    margin-top:20px;
+    margin-top:40px;
 }
 
-#score{
-    color:#fff;
-    font-size:20px;
-}
-
-.heart{
-    position:absolute;
-    font-size:30px;
-    cursor:pointer;
-    animation: float 5s linear infinite;
-}
-
-@keyframes float{
-    from{ transform: translateY(100vh); }
-    to{ transform: translateY(-10vh); }
-}
-
-#winScreen{
-    display:none;
-    position:fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    background: rgba(0,0,0,0.8);
-    color:white;
-    justify-content:center;
-    align-items:center;
-    flex-direction:column;
-    font-size:24px;
-}
 button{
-    padding:10px 20px;
-    border:none;
-    border-radius:10px;
+    padding:12px 25px;
     font-size:18px;
+    border:none;
+    border-radius:12px;
     cursor:pointer;
+    margin-top:20px;
     background:#ff4da6;
     color:white;
+}
+
+#gameArea{
+    margin-top:40px;
+}
+
+.hidden{
+    display:none;
+}
+
+#movingButton{
+    position:absolute;
 }
 </style>
 </head>
 
 <body>
 
-<h1>💘 Conquiste o Coração do Léo 💘</h1>
-<div id="score">Corações: 0 / 10</div>
+<h1>🎁 Descubra o Prêmio Misterioso 🎁</h1>
+<p>Você consegue desbloquear o prêmio secreto?</p>
 
-<div id="winScreen">
-    <p>🥰 Parabéns!</p>
-    <p>Você conquistou o coração do Léo 💖</p>
-    <button onclick="restart()">Jogar de novo</button>
+<div id="gameArea">
+    <button onclick="startGame()">Começar</button>
 </div>
 
 <script>
-let score = 0;
 
-function createHeart(){
-    let heart = document.createElement("div");
-    heart.classList.add("heart");
-    heart.innerHTML = "💖";
+let stage = 0;
 
-    heart.style.left = Math.random() * 100 + "vw";
-    heart.style.animationDuration = (3 + Math.random() * 3) + "s";
+function startGame(){
+    document.getElementById("gameArea").innerHTML =
+    "<p>Fase 1: Clique no botão 3 vezes</p><button onclick='nextStage()'>Clique aqui</button>";
+}
 
-    heart.onclick = function(){
-        score++;
-        document.getElementById("score").innerHTML = "Corações: " + score + " / 10";
-        heart.remove();
-
-        if(score >= 10){
-            document.getElementById("winScreen").style.display = "flex";
-        }
+function nextStage(){
+    stage++;
+    if(stage < 3){
+        return;
     }
 
-    document.body.appendChild(heart);
+    document.getElementById("gameArea").innerHTML =
+    "<p>Fase 2: Pegue o botão se conseguir 😏</p>";
 
-    setTimeout(()=>{ heart.remove(); },5000);
+    let btn = document.createElement("button");
+    btn.innerHTML = "Clique em mim";
+    btn.id = "movingButton";
+    btn.onmouseover = moveButton;
+    btn.onclick = finalStage;
+
+    document.body.appendChild(btn);
 }
 
-setInterval(createHeart,800);
-
-function restart(){
-    score = 0;
-    document.getElementById("score").innerHTML = "Corações: 0 / 10";
-    document.getElementById("winScreen").style.display = "none";
+function moveButton(){
+    let x = Math.random() * (window.innerWidth - 120);
+    let y = Math.random() * (window.innerHeight - 60);
+    this.style.left = x + "px";
+    this.style.top = y + "px";
 }
+
+function finalStage(){
+    document.body.innerHTML = `
+        <div style="display:flex;flex-direction:column;justify-content:center;align-items:center;height:100vh;text-align:center;">
+        <h1>🏆 Parabéns!</h1>
+        <p>Você desbloqueou o prêmio secreto...</p>
+        <h2 style="color:#ff4da6;">Um encontro especial com o Léo 😌</h2>
+        <p>Ele quer saber...</p>
+        <h3>Você aceita sair com ele essa semana?</h3>
+        <button onclick="alert('Ele já sabia 😏💖')">Sim 💘</button>
+        </div>
+    `;
+}
+
 </script>
 
 </body>
