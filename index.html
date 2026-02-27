@@ -1,1 +1,112 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>O Coração do Léo 💘</title>
 
+<style>
+body{
+    margin:0;
+    overflow:hidden;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(to bottom, #ffd6e7, #ff9ecf);
+    text-align:center;
+}
+
+h1{
+    color:#fff;
+    margin-top:20px;
+}
+
+#score{
+    color:#fff;
+    font-size:20px;
+}
+
+.heart{
+    position:absolute;
+    font-size:30px;
+    cursor:pointer;
+    animation: float 5s linear infinite;
+}
+
+@keyframes float{
+    from{ transform: translateY(100vh); }
+    to{ transform: translateY(-10vh); }
+}
+
+#winScreen{
+    display:none;
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background: rgba(0,0,0,0.8);
+    color:white;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+    font-size:24px;
+}
+button{
+    padding:10px 20px;
+    border:none;
+    border-radius:10px;
+    font-size:18px;
+    cursor:pointer;
+    background:#ff4da6;
+    color:white;
+}
+</style>
+</head>
+
+<body>
+
+<h1>💘 Conquiste o Coração do Léo 💘</h1>
+<div id="score">Corações: 0 / 10</div>
+
+<div id="winScreen">
+    <p>🥰 Parabéns!</p>
+    <p>Você conquistou o coração do Léo 💖</p>
+    <button onclick="restart()">Jogar de novo</button>
+</div>
+
+<script>
+let score = 0;
+
+function createHeart(){
+    let heart = document.createElement("div");
+    heart.classList.add("heart");
+    heart.innerHTML = "💖";
+
+    heart.style.left = Math.random() * 100 + "vw";
+    heart.style.animationDuration = (3 + Math.random() * 3) + "s";
+
+    heart.onclick = function(){
+        score++;
+        document.getElementById("score").innerHTML = "Corações: " + score + " / 10";
+        heart.remove();
+
+        if(score >= 10){
+            document.getElementById("winScreen").style.display = "flex";
+        }
+    }
+
+    document.body.appendChild(heart);
+
+    setTimeout(()=>{ heart.remove(); },5000);
+}
+
+setInterval(createHeart,800);
+
+function restart(){
+    score = 0;
+    document.getElementById("score").innerHTML = "Corações: 0 / 10";
+    document.getElementById("winScreen").style.display = "none";
+}
+</script>
+
+</body>
+</html>
