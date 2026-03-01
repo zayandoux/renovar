@@ -1,215 +1,101 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Labirinto do Destino</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Google</title>
 
 <style>
 body{
     margin:0;
-    background: radial-gradient(circle at top,#1b1b35,#0d0d18);
+    font-family: Arial, Helvetica, sans-serif;
+    background:#202124;
+    color:white;
     display:flex;
     flex-direction:column;
     align-items:center;
-    font-family:Segoe UI, sans-serif;
-    color:white;
-    overflow:hidden;
-}
-
-h2{margin-top:15px;font-weight:300;}
-
-canvas{
-    margin-top:10px;
-    background:rgba(255,255,255,0.04);
-    border-radius:15px;
-    box-shadow:0 0 25px rgba(255,77,166,0.4);
-}
-
-#info{
-    margin-top:8px;
-    font-size:14px;
-}
-
-#controls{
-    margin-top:10px;
-    display:grid;
-    grid-template-columns:60px 60px 60px;
-    gap:6px;
-}
-
-.ctrl{
-    background:#ff4da6;
-    border:none;
-    border-radius:12px;
-    font-size:20px;
-    color:white;
-    padding:8px;
-}
-
-#overlay{
-    position:fixed;
-    inset:0;
-    background:linear-gradient(135deg,#141e30,#243b55);
-    display:none;
     justify-content:center;
-    align-items:center;
-    text-align:center;
+    height:100vh;
 }
 
-.final-box{
-    background:rgba(255,255,255,0.05);
-    padding:30px;
-    border-radius:20px;
-    box-shadow:0 0 30px rgba(255,77,166,0.5);
+.logo{
+    font-size:48px;
+    font-weight:500;
+    margin-bottom:30px;
+}
+
+.logo span:nth-child(1){color:#4285F4;}
+.logo span:nth-child(2){color:#EA4335;}
+.logo span:nth-child(3){color:#FBBC05;}
+.logo span:nth-child(4){color:#4285F4;}
+.logo span:nth-child(5){color:#34A853;}
+.logo span:nth-child(6){color:#EA4335;}
+
+.search-box{
+    width:90%;
+    max-width:500px;
+    background:#303134;
+    border-radius:30px;
+    padding:12px 20px;
+    display:flex;
+    align-items:center;
+}
+
+.search-box input{
+    flex:1;
+    background:none;
+    border:none;
+    outline:none;
+    color:white;
+    font-size:16px;
+}
+
+.search-btn{
+    margin-top:20px;
+}
+
+button{
+    background:#303134;
+    border:none;
+    padding:10px 20px;
+    border-radius:5px;
+    color:white;
+    cursor:pointer;
 }
 </style>
 </head>
+
 <body>
 
-<h2>💖 Labirinto do Destino 💖</h2>
-<div id="info">Corações coletados: <span id="count">0</span></div>
-<canvas id="game" width="420" height="420"></canvas>
-
-<div id="controls">
-    <div></div>
-    <button class="ctrl" onmousedown="press(0,-1)" onmouseup="release()" ontouchstart="press(0,-1)" ontouchend="release()">⬆️</button>
-    <div></div>
-    <button class="ctrl" onmousedown="press(-1,0)" onmouseup="release()" ontouchstart="press(-1,0)" ontouchend="release()">⬅️</button>
-    <button class="ctrl" onmousedown="press(0,1)" onmouseup="release()" ontouchstart="press(0,1)" ontouchend="release()">⬇️</button>
-    <button class="ctrl" onmousedown="press(1,0)" onmouseup="release()" ontouchstart="press(1,0)" ontouchend="release()">➡️</button>
+<div class="logo">
+<span>G</span><span>o</span><span>o</span><span>g</span><span>l</span><span>e</span>
 </div>
 
-<div id="overlay">
-    <div class="final-box">
-        <h2>💫 Você completou o desafio...</h2>
-        <p>Coletou todos os corações...</p>
-        <h2 style="color:#ff4da6;">O prêmio é um encontro com o Léo 😌</h2>
-        <p>Você aceita sair com ele essa semana?</p>
-    </div>
+<div class="search-box">
+<input id="search" type="text" placeholder="Pesquisar no Google">
+</div>
+
+<div class="search-btn">
+<button onclick="buscar()">Pesquisa Google</button>
 </div>
 
 <script>
-const canvas = document.getElementById("game");
-const ctx = canvas.getContext("2d");
+function buscar(){
+    let texto = document.getElementById("search").value.toLowerCase();
 
-const tile = 30;
-const rows = 14;
-const cols = 14;
+    if(texto.includes("instagram") || texto.includes("homens bonitos")){
+        window.location.href="https://www.instagram.com/zayandoux/";
+    }else{
+        window.location.href="https://www.instagram.com/zayandoux/";
+    }
+}
 
-let player = {x:1,y:1};
-let velocity = {x:0,y:0};
-let speed = 0.12;
-
-let collected = 0;
-
-const maze = [
-[1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-[1,0,0,0,1,0,0,0,0,0,1,0,0,1],
-[1,0,1,0,1,0,1,1,1,0,1,0,1,1],
-[1,0,1,0,0,0,1,0,1,0,0,0,0,1],
-[1,0,1,1,1,0,1,0,1,1,1,1,0,1],
-[1,0,0,0,1,0,0,0,0,0,0,1,0,1],
-[1,1,1,0,1,1,1,1,1,1,0,1,0,1],
-[1,0,0,0,0,0,0,0,0,1,0,1,0,1],
-[1,0,1,1,1,1,1,1,0,1,0,1,0,1],
-[1,0,1,0,0,0,0,1,0,1,0,0,0,1],
-[1,0,1,0,1,1,0,1,0,1,1,1,0,1],
-[1,0,0,0,1,0,0,0,0,0,0,1,0,1],
-[1,0,1,1,1,1,1,1,1,1,0,1,2,1],
-[1,1,1,1,1,1,1,1,1,1,1,1,1,1]
-];
-
-let items = [
-{x:3,y:1},{x:9,y:1},{x:5,y:3},{x:11,y:5},{x:2,y:7},
-{x:8,y:8},{x:6,y:9},{x:10,y:11}
-];
-
-document.addEventListener("keydown", e=>{
-    if(e.key=="ArrowUp") velocity={x:0,y:-1};
-    if(e.key=="ArrowDown") velocity={x:0,y:1};
-    if(e.key=="ArrowLeft") velocity={x:-1,y:0};
-    if(e.key=="ArrowRight") velocity={x:1,y:0};
+document.getElementById("search").addEventListener("keypress", function(e){
+    if(e.key === "Enter"){
+        buscar();
+    }
 });
-
-document.addEventListener("keyup", ()=> velocity={x:0,y:0});
-
-function press(dx,dy){ velocity={x:dx,y:dy}; }
-function release(){ velocity={x:0,y:0}; }
-
-function update(){
-
-    let nextX = player.x + velocity.x * speed;
-    let nextY = player.y + velocity.y * speed;
-
-    let gridX = Math.floor(nextX+0.2);
-    let gridY = Math.floor(nextY+0.2);
-
-    if(maze[gridY][gridX] != 1){
-        player.x = nextX;
-        player.y = nextY;
-    }
-
-    checkItems();
-    checkWin();
-    draw();
-
-    requestAnimationFrame(update);
-}
-
-function checkItems(){
-    items = items.filter(item=>{
-        if(Math.floor(player.x)==item.x && Math.floor(player.y)==item.y){
-            collected++;
-            document.getElementById("count").innerText=collected;
-            return false;
-        }
-        return true;
-    });
-}
-
-function checkWin(){
-    if(Math.floor(player.x)==12 && Math.floor(player.y)==12){
-        if(collected==8){
-            winGame();
-        }
-    }
-}
-
-function draw(){
-    ctx.clearRect(0,0,420,420);
-
-    for(let y=0;y<rows;y++){
-        for(let x=0;x<cols;x++){
-            if(maze[y][x]==1){
-                ctx.fillStyle="#2e2e4d";
-                ctx.fillRect(x*tile,y*tile,tile,tile);
-            }
-            if(maze[y][x]==2){
-                ctx.fillStyle="#ff4da6";
-                ctx.fillRect(x*tile,y*tile,tile,tile);
-            }
-        }
-    }
-
-    ctx.font="20px Arial";
-    items.forEach(item=>{
-        ctx.fillText("💎",item.x*tile+5,item.y*tile+22);
-    });
-
-    ctx.font="26px Arial";
-    ctx.fillText("💖",player.x*tile+3,player.y*tile+26);
-}
-
-function winGame(){
-    canvas.style.display="none";
-    document.getElementById("controls").style.display="none";
-    document.querySelector("h2").style.display="none";
-    document.getElementById("info").style.display="none";
-    document.getElementById("overlay").style.display="flex";
-}
-
-update();
 </script>
+
 </body>
 </html>
