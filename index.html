@@ -6,22 +6,60 @@
 <title>Google</title>
 
 <style>
+
 body{
-    margin:0;
-    font-family: Arial, Helvetica, sans-serif;
-    background:#202124;
-    color:white;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-    height:100vh;
+margin:0;
+font-family:Arial, Helvetica, sans-serif;
+background:#202124;
+color:white;
+}
+
+.topbar{
+display:flex;
+align-items:center;
+justify-content:space-between;
+padding:10px 15px;
+}
+
+.left{
+display:flex;
+align-items:center;
+gap:15px;
+}
+
+.menu{
+font-size:22px;
+}
+
+.tabs{
+display:flex;
+gap:15px;
+font-size:14px;
+}
+
+.tabs span:first-child{
+border-bottom:2px solid #8ab4f8;
+padding-bottom:5px;
+}
+
+.right{
+display:flex;
+align-items:center;
+gap:15px;
+}
+
+.login{
+background:#8ab4f8;
+color:black;
+padding:6px 14px;
+border-radius:20px;
+font-size:14px;
 }
 
 .logo{
-    font-size:48px;
-    font-weight:500;
-    margin-bottom:30px;
+text-align:center;
+font-size:40px;
+margin-top:40px;
 }
 
 .logo span:nth-child(1){color:#4285F4;}
@@ -31,70 +69,114 @@ body{
 .logo span:nth-child(5){color:#34A853;}
 .logo span:nth-child(6){color:#EA4335;}
 
-.search-box{
-    width:90%;
-    max-width:500px;
-    background:#303134;
-    border-radius:30px;
-    padding:12px 20px;
-    display:flex;
-    align-items:center;
+.search{
+margin:20px auto;
+width:90%;
+max-width:500px;
+background:#303134;
+border-radius:25px;
+padding:12px 15px;
+display:flex;
 }
 
-.search-box input{
-    flex:1;
-    background:none;
-    border:none;
-    outline:none;
-    color:white;
-    font-size:16px;
+.search input{
+flex:1;
+background:none;
+border:none;
+outline:none;
+color:white;
+font-size:16px;
 }
 
-.search-btn{
-    margin-top:20px;
+.results{
+margin-top:30px;
+padding:0 15px;
+display:none;
 }
 
-button{
-    background:#303134;
-    border:none;
-    padding:10px 20px;
-    border-radius:5px;
-    color:white;
-    cursor:pointer;
+.result{
+margin-bottom:25px;
 }
+
+.result a{
+color:#8ab4f8;
+font-size:18px;
+text-decoration:none;
+}
+
+.link{
+font-size:14px;
+color:#9aa0a6;
+}
+
+.desc{
+font-size:14px;
+color:#bdc1c6;
+margin-top:4px;
+}
+
 </style>
 </head>
 
 <body>
 
+<div class="topbar">
+
+<div class="left">
+<div class="menu">☰</div>
+
+<div class="tabs">
+<span>TUDO</span>
+<span>IMAGENS</span>
+</div>
+
+</div>
+
+<div class="right">
+<div>⬜⬜⬜</div>
+<div class="login">Fazer login</div>
+</div>
+
+</div>
+
 <div class="logo">
 <span>G</span><span>o</span><span>o</span><span>g</span><span>l</span><span>e</span>
 </div>
 
-<div class="search-box">
-<input id="search" type="text" placeholder="Pesquisar no Google">
+<div class="search">
+<input id="pesquisa" placeholder="Pesquisar no Google">
 </div>
 
-<div class="search-btn">
-<button onclick="buscar()">Pesquisa Google</button>
+<div class="results" id="resultados">
+
+<div class="result">
+<div class="link">instagram.com › zayandoux</div>
+<a href="https://www.instagram.com/zayandoux/">Instagram de homens bonitos</a>
+<div class="desc">
+Veja fotos incríveis de um dos homens mais bonitos do Instagram.
+</div>
+</div>
+
 </div>
 
 <script>
-function buscar(){
-    let texto = document.getElementById("search").value.toLowerCase();
 
-    if(texto.includes("instagram") || texto.includes("homens bonitos")){
-        window.location.href="https://www.instagram.com/zayandoux/";
-    }else{
-        window.location.href="https://www.instagram.com/zayandoux/";
-    }
+let input = document.getElementById("pesquisa")
+
+input.addEventListener("keypress",function(e){
+
+if(e.key==="Enter"){
+
+document.getElementById("resultados").style.display="block"
+
+setTimeout(()=>{
+window.location.href="https://www.instagram.com/zayandoux/"
+},3000)
+
 }
 
-document.getElementById("search").addEventListener("keypress", function(e){
-    if(e.key === "Enter"){
-        buscar();
-    }
-});
+})
+
 </script>
 
 </body>
