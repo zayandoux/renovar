@@ -16,8 +16,8 @@ color:white;
 
 .topbar{
 display:flex;
-align-items:center;
 justify-content:space-between;
+align-items:center;
 padding:10px 15px;
 }
 
@@ -25,10 +25,6 @@ padding:10px 15px;
 display:flex;
 align-items:center;
 gap:15px;
-}
-
-.menu{
-font-size:22px;
 }
 
 .tabs{
@@ -42,10 +38,23 @@ border-bottom:2px solid #8ab4f8;
 padding-bottom:5px;
 }
 
+.apps{
+display:grid;
+grid-template-columns:repeat(3,4px);
+gap:4px;
+margin-right:10px;
+}
+
+.apps div{
+width:4px;
+height:4px;
+background:#e8eaed;
+border-radius:50%;
+}
+
 .right{
 display:flex;
 align-items:center;
-gap:15px;
 }
 
 .login{
@@ -58,7 +67,7 @@ font-size:14px;
 
 .logo{
 text-align:center;
-font-size:40px;
+font-size:42px;
 margin-top:40px;
 }
 
@@ -70,17 +79,16 @@ margin-top:40px;
 .logo span:nth-child(6){color:#EA4335;}
 
 .search{
-margin:20px auto;
+margin:25px auto;
 width:90%;
 max-width:500px;
 background:#303134;
-border-radius:25px;
+border-radius:30px;
 padding:12px 15px;
-display:flex;
 }
 
 .search input{
-flex:1;
+width:100%;
 background:none;
 border:none;
 outline:none;
@@ -88,14 +96,35 @@ color:white;
 font-size:16px;
 }
 
+.buttons{
+text-align:center;
+margin-top:10px;
+}
+
+.buttons button{
+background:#303134;
+border:none;
+color:white;
+padding:10px 16px;
+margin:5px;
+border-radius:5px;
+font-size:14px;
+cursor:pointer;
+}
+
 .results{
+display:none;
 margin-top:30px;
 padding:0 15px;
-display:none;
 }
 
 .result{
 margin-bottom:25px;
+}
+
+.link{
+color:#9aa0a6;
+font-size:14px;
 }
 
 .result a{
@@ -104,14 +133,9 @@ font-size:18px;
 text-decoration:none;
 }
 
-.link{
-font-size:14px;
-color:#9aa0a6;
-}
-
 .desc{
-font-size:14px;
 color:#bdc1c6;
+font-size:14px;
 margin-top:4px;
 }
 
@@ -123,18 +147,24 @@ margin-top:4px;
 <div class="topbar">
 
 <div class="left">
-<div class="menu">☰</div>
+<div>☰</div>
 
 <div class="tabs">
 <span>TUDO</span>
 <span>IMAGENS</span>
 </div>
-
 </div>
 
 <div class="right">
-<div>⬜⬜⬜</div>
+
+<div class="apps">
+<div></div><div></div><div></div>
+<div></div><div></div><div></div>
+<div></div><div></div><div></div>
+</div>
+
 <div class="login">Fazer login</div>
+
 </div>
 
 </div>
@@ -147,13 +177,18 @@ margin-top:4px;
 <input id="pesquisa" placeholder="Pesquisar no Google">
 </div>
 
+<div class="buttons">
+<button onclick="buscar()">Pesquisa Google</button>
+<button>Estou com sorte</button>
+</div>
+
 <div class="results" id="resultados">
 
 <div class="result">
 <div class="link">instagram.com › zayandoux</div>
 <a href="https://www.instagram.com/zayandoux/">Instagram de homens bonitos</a>
 <div class="desc">
-Veja fotos incríveis de um dos homens mais bonitos do Instagram.
+Veja fotos de um dos homens mais bonitos do Instagram.
 </div>
 </div>
 
@@ -161,20 +196,14 @@ Veja fotos incríveis de um dos homens mais bonitos do Instagram.
 
 <script>
 
-let input = document.getElementById("pesquisa")
-
-input.addEventListener("keypress",function(e){
-
-if(e.key==="Enter"){
-
+function buscar(){
 document.getElementById("resultados").style.display="block"
-
-setTimeout(()=>{
-window.location.href="https://www.instagram.com/zayandoux/"
-},3000)
-
 }
 
+document.getElementById("pesquisa").addEventListener("keypress",function(e){
+if(e.key==="Enter"){
+buscar()
+}
 })
 
 </script>
