@@ -2,242 +2,74 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Google</title>
+<title>Minha Loja de APK</title>
 
 <style>
-
 body{
-margin:0;
-font-family:Arial, Helvetica, sans-serif;
-background:#202124;
+font-family:Arial;
+background:#111;
 color:white;
+text-align:center;
 }
 
-.topbar{
+h1{
+margin-top:30px;
+}
+
+.container{
 display:flex;
-justify-content:space-between;
-align-items:center;
+flex-wrap:wrap;
+justify-content:center;
+margin-top:30px;
+}
+
+.app{
+background:#1e1e1e;
+padding:20px;
+margin:10px;
+border-radius:10px;
+width:200px;
+}
+
+button{
+background:#00c853;
+border:none;
 padding:10px 15px;
-}
-
-.left{
-display:flex;
-align-items:center;
-gap:15px;
-}
-
-.tabs{
-display:flex;
-gap:15px;
-font-size:14px;
-}
-
-.tabs span:first-child{
-border-bottom:2px solid #8ab4f8;
-padding-bottom:5px;
-}
-
-.apps{
-display:grid;
-grid-template-columns:repeat(3,4px);
-gap:4px;
-margin-right:10px;
-}
-
-.apps div{
-width:4px;
-height:4px;
-background:#e8eaed;
-border-radius:50%;
-}
-
-.right{
-display:flex;
-align-items:center;
-}
-
-.login{
-background:#8ab4f8;
-color:black;
-padding:6px 14px;
-border-radius:20px;
-font-size:14px;
-}
-
-.logo{
-text-align:center;
-font-size:42px;
-margin-top:40px;
-}
-
-.logo span:nth-child(1){color:#4285F4;}
-.logo span:nth-child(2){color:#EA4335;}
-.logo span:nth-child(3){color:#FBBC05;}
-.logo span:nth-child(4){color:#4285F4;}
-.logo span:nth-child(5){color:#34A853;}
-.logo span:nth-child(6){color:#EA4335;}
-
-.search{
-margin:25px auto;
-width:90%;
-max-width:500px;
-background:#303134;
-border-radius:30px;
-padding:12px 15px;
-}
-
-.search input{
-width:100%;
-background:none;
-border:none;
-outline:none;
 color:white;
-font-size:16px;
-}
-
-.buttons{
-text-align:center;
-margin-top:10px;
-}
-
-.buttons button{
-background:#303134;
-border:none;
-color:white;
-padding:10px 16px;
-margin:5px;
 border-radius:5px;
-font-size:14px;
 cursor:pointer;
 }
-
-.results{
-display:none;
-margin-top:30px;
-padding:0 15px;
-}
-
-.result{
-margin-bottom:25px;
-}
-
-.link{
-color:#9aa0a6;
-font-size:14px;
-}
-
-.result a{
-color:#8ab4f8;
-font-size:18px;
-text-decoration:none;
-}
-
-.desc{
-color:#bdc1c6;
-font-size:14px;
-margin-top:4px;
-}
-
-.images{
-display:grid;
-grid-template-columns:repeat(2,1fr);
-gap:10px;
-margin-top:20px;
-}
-
-.instagram-media{
-background:#000 !important;
-}
-
 </style>
 </head>
 
 <body>
 
-<div class="topbar">
+<h1>Minha Loja de Apps</h1>
 
-<div class="left">
-<div>☰</div>
+<div class="container">
 
-<div class="tabs">
-<span>TUDO</span>
-<span>IMAGENS</span>
-</div>
-</div>
-
-<div class="right">
-
-<div class="apps">
-<div></div><div></div><div></div>
-<div></div><div></div><div></div>
-<div></div><div></div><div></div>
-</div>
-
-<div class="login">Fazer login</div>
-
-</div>
-
-</div>
-
-<div class="logo">
-<span>G</span><span>o</span><span>o</span><span>g</span><span>l</span><span>e</span>
-</div>
-
-<div class="search">
-<input id="pesquisa" placeholder="Pesquisar no Google">
-</div>
-
-<div class="buttons">
-<button onclick="buscar()">Pesquisa Google</button>
-<button>Estou com sorte</button>
-</div>
-
-<div class="results" id="resultados">
-
-<div class="result">
-<div class="link">instagram.com › zayandoux</div>
-<a href="https://www.instagram.com/zayandoux/" target="_blank">
-Instagram de homens bonitos
+<div class="app">
+<h3>App 1</h3>
+<a href="apps/app1.apk">
+<button>Baixar</button>
 </a>
-<div class="desc">
-Veja fotos de um dos homens mais bonitos do Instagram.
-</div>
 </div>
 
-<div class="images">
+<div class="app">
+<h3>App 2</h3>
+<a href="apps/app2.apk">
+<button>Baixar</button>
+</a>
+</div>
 
-<blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/DGlDaqexXJ_/"></blockquote>
-
-<blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/C98iBxNvk2K/"></blockquote>
-
-<blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/CmwS8J9LTog/"></blockquote>
-
-<blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/CEHSz38A0GY/"></blockquote>
-
-<blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/CB-lZp8AO-T/"></blockquote>
-
-<blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/BrT0YglHArK/"></blockquote>
-
+<div class="app">
+<h3>App 3</h3>
+<a href="apps/app3.apk">
+<button>Baixar</button>
+</a>
 </div>
 
 </div>
-
-<script async src="//www.instagram.com/embed.js"></script>
-
-<script>
-
-function buscar(){
-document.getElementById("resultados").style.display="block"
-}
-
-document.getElementById("pesquisa").addEventListener("keypress",function(e){
-if(e.key==="Enter"){
-buscar()
-}
-})
-
-</script>
 
 </body>
 </html>
