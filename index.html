@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head> http://cdn.netplaygalaxy.shop:80/get.php?username=21648534&password=91347536&type=m3u_plus&output=mpegts
+<head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Renovar Assinatura</title>
+
   <style>
     body {
       margin: 0;
@@ -14,6 +15,7 @@
       align-items: center;
       height: 100vh;
     }
+
     .container {
       background-color: white;
       border-radius: 20px;
@@ -24,19 +26,12 @@
       box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
       color: #000;
     }
+
     .logo {
       max-width: 120px;
       margin-bottom: 20px;
     }
-    h2 {
-      margin-bottom: 10px;
-      font-size: 24px;
-    }
-    p {
-      color: #555;
-      font-size: 14px;
-      margin-bottom: 30px;
-    }
+
     input[type="text"] {
       width: 80%;
       padding: 15px;
@@ -45,8 +40,8 @@
       font-size: 16px;
       margin-bottom: 20px;
       background-color: #f5f5f5;
-      color: #000;
     }
+
     .btn-acessar {
       width: 80%;
       padding: 15px;
@@ -57,22 +52,24 @@
       border-radius: 50px;
       cursor: pointer;
     }
+
     .btn-renovar {
       width: 80%;
       padding: 15px;
       background-color: #00796b;
       color: white;
       font-size: 16px;
-      border: none;
       border-radius: 30px;
       margin-top: 20px;
-      text-decoration: none;
       display: inline-block;
+      text-decoration: none;
     }
+
     .mensagem-erro {
       color: red;
       margin-top: 20px;
     }
+
     .nome-usuario {
       font-weight: bold;
       font-size: 16px;
@@ -81,41 +78,26 @@
     }
   </style>
 </head>
+
 <body>
   <div class="container">
-    <img src="logo_sem_fundo.png" alt="Logo TV ON+" class="logo" />
+    <img src="logo_sem_fundo.png" alt="Logo" class="logo" />
     <h2>Renovar Assinatura</h2>
     <p>Digite seu telefone para continuar</p>
 
-    <label for="telefone" style="display:none;">Número de telefone</label>
     <input type="text" id="telefone" placeholder="(00)00000-0000" maxlength="15" oninput="mascaraTelefone(this)" />
-    <button class="btn-acessar" id="botaoAcessar" onclick="mostrarLink()" disabled>Acessar</button>
     
+    <button class="btn-acessar" id="botaoAcessar" onclick="mostrarLink()" disabled>
+      Acessar
+    </button>
+
     <div id="resultado"></div>
   </div>
 
   <script>
     const dados = {
       "12988473131": ["Marcos Vinícius", "https://bruxplay.top/#/checkout/231qAP214q/RXDgKVKoDe"],
-      "12997455589": ["Alexia Fernandes de Carvalho", "https://bruxplay.top/#/checkout/231qAP214q/ywDmKx0J1p"],
-      "12981769137": ["Pedro Alvarenga", "https://bruxplay.top/#/checkout/231qAP214q/V4D3kee5Da"],
-      "12997207221": ["Cibel Macedo", "https://bruxplay.top/#/checkout/231qAP214q/yb1BznxG1P"],
-      "11983453953": ["Letícia", "https://bruxplay.top/#/checkout/231qAP214q/mVLl9PV7DQ"],
-      "12992547287": ["Fernando Henrique", "https://bruxplay.top/#/checkout/231qAP214q/pKDa4MvrLR"],
-      "11967230333": ["Frank", "https://bruxplay.top/#/checkout/231qAP214q/r6LJ8nGbWv"],
-      "12981241678": ["Douglas Campos", "https://bruxplay.top/#/checkout/231qAP214q/r6LJ8RxOWv"],
-      "12981899366": ["Suelen Cristine", "https://bruxplay.top/#/checkout/231qAP214q/r6LJ8J7nWv"],
-      "11998147079": ["Rita de Cássia", "https://bruxplay.top/#/checkout/231qAP214q/V4D3kaA9Da"],
-      "11945045029": ["Elder", "https://bruxplay.top/#/checkout/231qAP214q/V4D3ka3pDa"],
-      "12981928439": ["Cassiano", "https://bruxplay.top/#/checkout/231qAP214q/241Kz54KWm"],
-      "11969751469": ["Marlon", "https://bruxplay.top/#/checkout/231qAP214q/8K1xJBRKDv"],
-      "11944270681": ["Mavillin Rossini de Souza", "https://bruxplay.top/#/checkout/231qAP214q/4vLbJjp7Lg"],
-      "12992424638": ["Moisés", "https://bruxplay.top/#/checkout/231qAP214q/pKDar5X0WR"],
-      "12992183613": ["Jorge", "https://bruxplay.top/#/checkout/231qAP214q/OxLA7EbpWZ"],
-      "12996437435": ["Juliano Oliveira", "https://bruxplay.top/#/checkout/231qAP214q/4vLbE0zN1g"],
-      "12981430040": ["Larissa Lima", "https://bruxplay.top/#/checkout/231qAP214q/241KzJY8Wm"],
-      "12996275229": ["Lilian", "https://bruxplay.top/#/checkout/231qAP214q/RvWGzz0lDe"],
-      "11971883998": ["Ricardo", "https://bruxplay.top/#/checkout/231qAP214q/xl1jl52GDM"]
+      "12997455589": ["Alexia Fernandes de Carvalho", "https://bruxplay.top/#/checkout/231qAP214q/ywDmKx0J1p"]
     };
 
     document.getElementById("telefone").addEventListener("input", function () {
@@ -125,19 +107,38 @@
 
     function mascaraTelefone(input) {
       let valor = input.value.replace(/\D/g, '');
+
       if (valor.length > 10) {
         valor = valor.replace(/(\d{2})(\d{5})(\d{4})/, '($1)$2-$3');
       } else {
         valor = valor.replace(/(\d{2})(\d{4})(\d{4})/, '($1)$2-$3');
       }
+
       input.value = valor;
     }
 
     function mostrarLink() {
-      const telefone = document.getElementById("telefone").value.replace(/\D/g, '').trim();
+      const telefone = document.getElementById("telefone").value.replace(/\D/g, '');
       const resultado = document.getElementById("resultado");
 
-      if (!telefone || telefone.length < 10) {
-        resultado.innerHTML = '<p class="mensagem-erro">Por favor, insira um telefone válido.</p>';
-        return;
+      if (dados[telefone]) {
+        const nome = dados[telefone][0];
+        const link = dados[telefone][1];
+
+        resultado.innerHTML = `
+          <p class="nome-usuario">Olá, ${nome} 👋</p>
+          <a href="${link}" target="_blank" class="btn-renovar">
+            Renovar Assinatura
+          </a>
+        `;
+      } else {
+        resultado.innerHTML = `
+          <p class="mensagem-erro">
+            Número não encontrado. Verifique ou entre em contato com o suporte.
+          </p>
+        `;
       }
+    }
+  </script>
+</body>
+</html>
